@@ -4,11 +4,13 @@
 
 import torch
 from torch import nn
-import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
 
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsRegressor
+
+import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 from model import Model
@@ -28,6 +30,7 @@ if __name__ == '__main__':
     print(f'X_train.shape:{X_train.shape}, y_train.shape:{y_train.shape}')
     print(f'X_test.shape:{X_test.shape}, y_test.shape:{y_test.shape}')
 
+    # --------------------深度学习之全连接网络-------------------------------------start
     # 打包训练集，打包测试集
     train_dataset = MyDataset(X=X_train, y=y_train)
     train_dataloader = DataLoader(dataset=train_dataset, shuffle=True, batch_size=32)
@@ -95,4 +98,18 @@ if __name__ == '__main__':
     plt.plot(x, y2)
     plt.show()
 
+    # --------------------深度学习之全连接网络---------------------------------end
 
+    # --------------------机器学习之最近邻KNN---------------------------------start
+    # KNN 最小近邻
+    knn = KNeighborsRegressor()
+    knn.fit(X=X_train, y=y_train)
+    y_pred_knn = knn.predict(X_test)
+    knn_score = knn.score(X_test, y_test)
+    # loss_test_knn = loss_fn(y_pred_knn, y_test)
+    # mean squared error  模型评价
+    loss_test_knn = ((y_test - y_pred_knn) ** 2).mean()
+    print(f'KNN knn_score:{knn_score}')
+    print(f'KNN loss_test_knn:{loss_test_knn}')
+
+    # --------------------机器学习之最近邻KNN---------------------------------end
